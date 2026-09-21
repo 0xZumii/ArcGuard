@@ -22,6 +22,14 @@ export const CONFIG = {
   rpcUrl: "",
 
   /**
+   * The canonical URL this tool is published at, once you have a custom domain.
+   * Leave empty while on GitHub Pages: the site still shows the non-affiliation
+   * notice, and simply omits the "this is the only address" line.
+   *   canonicalUrl: "https://arcguard.dev/",
+   */
+  canonicalUrl: "",
+
+  /**
    * Chain ID the checker insists on. If the RPC answers with anything else the
    * tool refuses to give findings, because analysing the wrong chain is itself a
    * way to be misled.

@@ -147,6 +147,25 @@ console.log("\nthe page never claims safety");
 if (/not an oracle/.test(html) && /never says/.test(html)) ok("the static copy states findings are not a safety guarantee");
 else fail("the page does not state the limitation");
 
+console.log("\nnon-affiliation");
+if (/Not affiliated with Circle or Arc/.test(html)) ok("states it is not affiliated with Circle or Arc");
+else fail("no non-affiliation notice");
+if (/only official Arc site is/.test(html) && /arc\.io/.test(html)) ok("points at the real arc.io");
+else fail("does not point at official arc.io");
+if (/(^|\n)\s*<p class="affiliation"/.test(html)) ok("the notice is in the page body, not just the footer");
+else fail("notice is not rendered in the body");
+
+// With canonicalUrl empty (GitHub Pages), the notice must NOT pretend there is a
+// canonical address it cannot name.
+const slot = dom.window.document.getElementById("canonical-slot");
+if (slot) ok("canonical slot is present");
+else fail("canonical slot missing");
+if (slot && !/published only at/.test(slot.textContent)) {
+  ok("no canonical URL claimed while canonicalUrl is unset");
+} else {
+  fail("claims a canonical URL that is not configured");
+}
+
 // Re-run the quiet example and read the headline directly: a clean result must
 // still refuse to say the transaction is safe.
 examples[5].dispatchEvent(new dom.window.Event("click", { bubbles: true }));

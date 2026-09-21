@@ -127,6 +127,17 @@ prevent it:
 Once Pages is set to `/docs`, the root `index.html` is redundant and can be
 deleted.
 
+**A custom domain is optional.** If you add one: put the bare domain in
+`docs/CNAME`, point DNS at GitHub Pages' four `A` records plus a `www` CNAME, and
+set `canonicalUrl` in `docs/config.js`. The site then names the address it is
+published at — which is the honest thing for a tool whose entire lesson is domain
+vigilance. The non-affiliation notice renders whether or not a domain is set.
+
+A note on picking one: `.dev` and `.app` are HSTS-preloaded, so browsers refuse
+to serve them over plain HTTP. For a security tool that is a small but real
+advantage, and both are cheap with stable renewals — unlike first-year teaser
+prices, which is where `.live` and `.xyz` get you.
+
 ### 2. The registry contract (Arc mainnet)
 
 The contract is already compiled and committed at

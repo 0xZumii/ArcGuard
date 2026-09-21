@@ -74,6 +74,19 @@ h1 { font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
 .dot--bad { background: var(--critical); }
 @keyframes pulse { 50% { opacity: 0.35; } }
 
+/* ---------- non-affiliation notice ---------- */
+.affiliation {
+  margin: 0 0 1.75rem;
+  padding: 0.7rem 1rem;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius);
+  background: #0d1119;
+  color: var(--text-dim);
+  font-size: 0.83rem;
+}
+.affiliation strong { color: var(--text); }
+.affiliation code { font-size: 0.85em; }
+
 /* ---------- callout ---------- */
 .callout {
   background: var(--bg-raised);
@@ -82,8 +95,7 @@ h1 { font-size: 1.35rem; margin: 0; letter-spacing: -0.01em; }
   border-radius: var(--radius);
   padding: 1.1rem 1.25rem;
   margin-bottom: 1.75rem;
-}
-.callout h2 { font-size: 0.95rem; margin: 0 0 0.6rem; color: var(--text); }
+}.callout h2 { font-size: 0.95rem; margin: 0 0 0.6rem; color: var(--text); }
 .callout ul { margin: 0; padding-left: 1.15rem; color: var(--text-dim); font-size: 0.9rem; }
 .callout li + li { margin-top: 0.45rem; }
 .callout strong { color: var(--text); }

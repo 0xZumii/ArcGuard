@@ -398,10 +398,39 @@ function wireTabs() {
   }
 }
 
+/**
+ * State where this tool is actually published.
+ *
+ * A security tool that tells people to verify the URL they are on should say
+ * which URL is its own. When canonicalUrl is unset (GitHub Pages), the
+ * non-affiliation notice still renders; only the "this is the only address"
+ * line is omitted, rather than showing a half-truth.
+ */
+function renderCanonical() {
+  const slot = $("canonical-slot");
+  if (!slot) return;
+  const canonical = (CONFIG.canonicalUrl ?? "").trim();
+  if (!canonical) return;
+  let host;
+  try {
+    host = new URL(canonical).host;
+  } catch {
+    return;
+  }
+  slot.replaceChildren(
+    document.createTextNode(" This tool is published only at "),
+    h("code", { text: host }),
+    document.createTextNode(
+      " — if you are reading it anywhere else, you are on a copy, and a copy can be edited.",
+    ),
+  );
+}
+
 function init() {
   wireTabs();
   renderExamples();
   verifyChain();
+  renderCanonical();
 
   $("tx-form").addEventListener("submit", (event) => {
     event.preventDefault();
