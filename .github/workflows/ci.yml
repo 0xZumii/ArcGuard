@@ -9,8 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    # Node 22, not 24: ganache's bundled µWS binary is incompatible with Node 24
-    # and forces a non-zero exit even when every assertion passes.
+    # Node 20 and 22, deliberately not 24: ganache's bundled µWS binary is
+    # incompatible with Node 24 and forces a non-zero exit even when every
+    # assertion passes. 20 is the declared floor in package.json; testing both
+    # is what caught the native-module failure on 22.
     strategy:
       matrix:
         node: [20, 22]
@@ -22,7 +24,12 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: npm
 
-      - run: npm ci
+      # --ignore-scripts matches npm 12's default on the dev machine, and it is
+      # required here: ganache drags in ancient native modules (keccak,
+      # secp256k1, leveldown, @trufflesuite/bigint-buffer) whose node-gyp builds
+      # compile on Node 20 but fail on Node 22's V8. Ganache has JS fallbacks for
+      # all of them, so skipping the builds is safe and faster.
+      - run: npm ci --ignore-scripts --no-audit --no-fund
 
       - name: Unit tests (keccak, decoding, checks, domains)
         run: npm test
@@ -61,7 +68,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-      - run: npm ci
+      - run: npm ci --ignore-scripts --no-audit --no-fund
 
       # The check that matters most: every address the tool trusts is asked for
       # directly on mainnet and testnet. A wrong address fails the build.
