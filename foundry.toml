@@ -1,0 +1,19 @@
+[profile.default]
+src = "contracts/src"
+test = "contracts/test"
+script = "contracts/script"
+out = "contracts/out"
+libs = ["lib"]
+solc = "0.8.30"
+# Arc runs the EVM at the Osaka hard fork, which includes everything here. We
+# target Paris on purpose: this contract needs no Cancun-only opcodes, and Paris
+# stays runnable on every local test EVM too.
+evm_version = "paris"
+optimizer = true
+optimizer_runs = 200
+
+# Named endpoints so deploy/test commands are readable and repeatable:
+#   forge script script/Deploy.s.sol --rpc-url arc --broadcast
+[rpc_endpoints]
+arc = "https://rpc.mainnet.arc.io"
+arc_testnet = "https://rpc.testnet.arc.io"

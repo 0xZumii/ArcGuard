@@ -1,0 +1,26 @@
+{
+  "name": "arc-guard",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pre-flight transaction checker for Arc mainnet: catch the bridge, approval and permit patterns that drain wallets.",
+  "license": "MIT",
+  "scripts": {
+    "test": "node --test",
+    "test:contract": "node scripts/test-contract.mjs",
+    "test:page": "node scripts/check-page.mjs",
+    "build:contract": "node scripts/build-contract.mjs",
+    "check:live": "node scripts/live-check.mjs",
+    "smoke:site": "node scripts/smoke-site.mjs",
+    "serve": "node scripts/serve.mjs"
+  },
+  "devDependencies": {
+    "ethers": "^6.17.0",
+    "ganache": "^7.9.2",
+    "jsdom": "^30.1.0",
+    "solc": "0.8.30"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arc Guard — check a transaction before you sign it</title>
+<meta name="description" content="A pre-flight checker for Arc mainnet. Decode what a transaction authorises, verify addresses against Circle's published contracts, and catch the bridge, approval and permit patterns that drain wallets." />
+<link rel="stylesheet" href="./styles.css" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>🛡️</text></svg>" />
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🛡</span>
+      <div>
+        <h1>Arc Guard</h1>
+        <p class="tagline">Check what a transaction does before you sign it.</p>
+      </div>
+    </div>
+    <div class="chain-status" id="chain-status" role="status" aria-live="polite">
+      <span class="dot dot--pending"></span><span id="chain-text">connecting to Arc…</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="callout callout--fact">
+    <h2>Three things that are true about Arc, and that scams rely on you not knowing</h2>
+    <ul>
+      <li><strong>ARC is not publicly tradable.</strong> Circle genesis-minted 10 billion ARC and described it as a technical milestone, <em>not</em> a public launch: ARC is not used for gas, staking or governance, and no public sale has been announced. Any ARC you can actually buy is not Circle's ARC.</li>
+      <li><strong>Real USDC bridging calls <code>depositForBurn</code> on the CCTP TokenMessenger contract</strong> (<code class="mono">0x28b5…cf5d</code>). It never asks you to send USDC to a wallet address.</li>
+      <li><strong>Arc had no airdrop, no faucet on mainnet, and no rewards programme.</strong> Anywhere offering to claim, vote on, or unlock those things is inventing them.</li>
+    </ul>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="What do you want to check?">
+    <button class="tab is-active" role="tab" aria-selected="true" data-tab="transaction">A transaction</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="address">An address</button>
+    <button class="tab" role="tab" aria-selected="false" data-tab="link">A link</button>
+  </nav>
+
+  <!-- ================= TRANSACTION ================= -->
+  <section class="panel is-active" id="panel-transaction" role="tabpanel">
+    <p class="panel-intro">
+      Paste what your wallet is about to ask you to sign — or a transaction hash you have already
+      seen. Nothing is sent to us; the page talks to Arc's public RPC directly from your browser.
+    </p>
+
+    <form id="tx-form" class="form">
+      <div class="field">
+        <label for="tx-hash">Already have a transaction hash? <span class="dim">(optional)</span></label>
+        <div class="row">
+          <input id="tx-hash" type="text" placeholder="0x… transaction hash" spellcheck="false" autocomplete="off" />
+          <button type="button" class="btn btn--ghost" id="tx-load">Load it</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="tx-to">To <span class="dim">(the address the transaction is sent to)</span></label>
+        <input id="tx-to" type="text" placeholder="0x… 40 hex characters" spellcheck="false" autocomplete="off" />
+      </div>
+
+      <div class="field">
+        <label for="tx-value">Value in USDC <span class="dim">(optional — the native amount)</span></label>
+        <input id="tx-value" type="text" placeholder="0" spellcheck="false" autocomplete="off" />
+        <p class="hint">Decimals matter on Arc: the native gas asset has 18, the USDC ERC-20 interface has 6. Enter what your wallet shows.</p>
+      </div>
+
+      <div class="field">
+        <label for="tx-claim">What were you told this would do? <span class="dim">(this is where the scams are)</span></label>
+        <select id="tx-claim">
+          <option value="unknown">Not sure / I was not told</option>
+          <option value="bridge">Bridge my USDC to another chain</option>
+          <option value="pay">Pay someone</option>
+          <option value="approve">Connect my wallet / approve a token</option>
+          <option value="rewards">Claim rewards or an airdrop</option>
+          <option value="swap">Swap tokens</option>
+        </select>
+        <p class="hint">A transaction on its own is often neutral. Sending USDC to a wallet is a payment or a theft depending on what you were promised — and a <code>transfer()</code> call is ordinary until someone calls it a bridge.</p>
+      </div>
+
+      <div class="field">
+        <label for="tx-data">Calldata <span class="dim">(optional — starts with 0x)</span></label>
+        <textarea id="tx-data" rows="3" placeholder="0x" spellcheck="false" autocomplete="off"></textarea>
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn btn--primary">Check this transaction</button>
+        <button type="button" class="btn btn--ghost" id="tx-clear">Clear</button>
+      </div>
+    </form>
+
+    <div class="examples">
+      <p class="examples-label">Or load a documented Arc scam pattern and watch it get caught:</p>
+      <div class="examples-row" id="examples"></div>
+    </div>
+
+    <div id="tx-results" class="results" aria-live="polite"></div>
+  </section>
+
+  <!-- ================= ADDRESS ================= -->
+  <section class="panel" id="panel-address" role="tabpanel">
+    <p class="panel-intro">
+      Is this address what you were told it is? This reads the contract code straight from Arc
+      mainnet and compares it against Circle's published addresses.
+    </p>
+    <form id="addr-form" class="form">
+      <div class="field">
+        <label for="addr-input">Address</label>
+        <input id="addr-input" type="text" placeholder="0x… 40 hex characters" spellcheck="false" autocomplete="off" />
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn--primary">Check this address</button>
+      </div>
+    </form>
+    <div id="addr-results" class="results" aria-live="polite"></div>
+  </section>
+
+  <!-- ================= LINK ================= -->
+  <section class="panel" id="panel-link" role="tabpanel">
+    <p class="panel-intro">
+      Where does a link actually point? The documented Arc drainer
+      (<code>governance-arc.com</code>) clones the real Arc site and drains you on wallet
+      connect — no malicious contract involved, so no amount of bytecode reading catches it.
+      Checking the domain does.
+    </p>
+    <form id="link-form" class="form">
+      <div class="field">
+        <label for="link-input">Link or hostname</label>
+        <input id="link-input" type="text" placeholder="https://example.com or example.com" spellcheck="false" autocomplete="off" />
+      </div>
+      <div class="actions">
+        <button type="submit" class="btn btn--primary">Check this link</button>
+      </div>
+    </form>
+    <div id="link-results" class="results" aria-live="polite"></div>
+  </section>
+
+  <section class="limits">
+    <h2>What this tool does not do</h2>
+    <ul>
+      <li>It is <strong>not an oracle</strong>. It never says "safe". It reports what it observed and what it could not see.</li>
+      <li>It cannot catch a scam it has never seen a pattern of. It recognises the <em>documented</em> Arc patterns, not novel ones.</li>
+      <li>The community registry is <strong>uncurated public reports</strong>, not a verified blocklist. Reports can be wrong and can be filed by anyone — read them, including who filed them.</li>
+      <li>A clone of the <em>authorised</em> front end can still drain you by asking for a signature this page has never been taught to read.</li>
+      <li>Bytecode reading is heuristic. Decompiled intent is not intent.</li>
+    </ul>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>
+      <strong>Arc Guard</strong> — checks run against Arc mainnet (chain 5042) through the public
+      RPC. Official Arc parameters: <a href="https://docs.arc.io/arc/references/contract-addresses" rel="noopener">docs.arc.io</a> ·
+      explorer: <a href="https://explorer.arc.io" rel="noopener">explorer.arc.io</a>.
+      Always verify an address by typing it into the official explorer yourself, never by following a link.
+    </p>
+    <p style="margin-top:0.6rem">
+      <a href="./deploy.html">Deploy the community registry</a> ·
+      <a href="./artifacts/ArcGuardRegistry.json">Registry ABI</a>
+    </p>
+  </div>
+</footer>
+
+<script type="module" src="./app.js"></script>
+</body>
+</html>

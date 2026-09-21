@@ -1,0 +1,24 @@
+# dependencies (only needed to build/test the contract without Foundry)
+node_modules/
+
+# foundry
+contracts/out/
+contracts/cache/
+cache/
+out/
+# NOTE: lib/ is deliberately NOT ignored. `forge install` puts forge-std there as
+# a git submodule, and ignoring it would break `forge build` / `forge test` for
+# anyone who clones this repo.
+# foundry.lock IS committed on purpose: it pins the dependency versions.
+
+# generated, but committed on purpose: contracts/artifacts is what the
+# browser deploy page reads. Regenerate with `npm run build:contract`.
+
+# python
+__pycache__/
+*.pyc
+
+# os / editor
+.DS_Store
+Thumbs.db
+*.swp

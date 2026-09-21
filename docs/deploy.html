@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arc Guard — deploy the registry</title>
+<meta name="robots" content="noindex" />
+<link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap header-inner">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">🛡</span>
+      <div>
+        <h1>Deploy ArcGuardRegistry</h1>
+        <p class="tagline">One transaction, from your own wallet. No Foundry, no key files, no scripts holding a private key.</p>
+      </div>
+    </div>
+    <div class="chain-status" id="chain-status" role="status" aria-live="polite">
+      <span class="dot dot--pending"></span><span id="chain-text">not connected</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="callout callout--fact">
+    <h2>Read this before you click</h2>
+    <ul>
+      <li>This deploys to <strong>Arc mainnet (chain 5042)</strong>. The gas is real USDC — roughly a cent.</li>
+      <li>The contract is <strong>ownerless</strong>: no admin, no upgrade path, no withdrawal. Once it is deployed, nobody (including you) can change it. That is deliberate.</li>
+      <li>Your private key never leaves your wallet. This page only asks the wallet to send one transaction.</li>
+      <li>After it deploys, copy the address into <code>docs/config.js</code> and commit it. That is the only wiring step.</li>
+    </ul>
+  </section>
+
+  <section class="panel is-active">
+    <div class="form">
+      <div class="field">
+        <label>Artifact</label>
+        <p class="hint" id="artifact-info">Loading contracts/artifacts/ArcGuardRegistry.json…</p>
+      </div>
+
+      <div class="field">
+        <label>Your account</label>
+        <p class="hint" id="account-info">Connect a wallet to continue.</p>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="btn btn--ghost" id="connect">Connect wallet</button>
+        <button type="button" class="btn btn--ghost" id="switch" disabled>Switch to Arc</button>
+        <button type="button" class="btn btn--primary" id="deploy" disabled>Deploy to Arc mainnet</button>
+      </div>
+    </div>
+
+    <div id="deploy-results" class="results" aria-live="polite"></div>
+  </section>
+
+  <section class="limits">
+    <h2>If you would rather use Foundry</h2>
+    <pre><code>forge install foundry-rs/forge-std
+export PRIVATE_KEY=0x...
+forge script script/Deploy.s.sol --rpc-url arc --broadcast</code></pre>
+    <p class="hint">Both routes produce the same contract. Pick whichever you trust more.</p>
+  </section>
+</main>
+
+<script type="module" src="./deploy.js"></script>
+</body>
+</html>
