@@ -1,5 +1,7 @@
 # Arc Guard
 
+<img src="docs/logo.svg" alt="Arc Guard" width="96" height="96" />
+
 **Check what a transaction does before you sign it — on Arc mainnet.**
 
 Arc Guard is a pre-flight checker for Arc, Circle's USDC-native L1. Paste a

@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128" role="img" aria-label="Arc Guard">
+  <title>Arc Guard</title>
+
+  <!--
+    The dark tile is deliberate: the arch is white, so on a light background
+    (GitHub's light theme, a light browser tab) a transparent mark would vanish.
+    The tile guarantees the mark is legible wherever it lands. On the site's own
+    #0a0d12 background it reads as seamless.
+  -->
+  <rect width="128" height="128" rx="28" fill="#0a0d12"/>
+
+  <!--
+    Arch: an 11-unit band, semicircle crown plus two straight legs with flat
+    feet. Outer radius 40, inner 29, so the band is a constant width — no taper,
+    which was the element that looked accidental in the earlier drafts.
+    Doubles as an "A" for Arc and a gateway you pass through.
+  -->
+  <path
+    d="M24 107 L24 61 A40 40 0 0 1 104 61 L104 107 L93 107 L93 61 A29 29 0 0 0 35 61 L35 107 Z"
+    fill="#ffffff"/>
+
+  <!--
+    Verified check inside the opening, drawn as a stroked polyline so the joins
+    stay sharp and the weight matches the arch band exactly (11). Stroke colour
+    is the site accent token, so logo and product cannot drift apart.
+    Butt caps cut the ends perpendicular to each stroke, which is the crisp
+    diagonal finish rather than a rounded one.
+  -->
+  <polyline
+    points="45,64 61,80 83,58"
+    fill="none"
+    stroke="#4f8cff"
+    stroke-width="11"
+    stroke-linecap="butt"
+    stroke-linejoin="miter"/>
+</svg>
