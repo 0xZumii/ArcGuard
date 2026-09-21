@@ -13,10 +13,10 @@ export const CONFIG = {
 
   /**
    * Address of the deployed ArcGuardRegistry contract on Arc mainnet.
-   * Leave empty to disable registry lookups. Set it after:
-   *   forge script script/Deploy.s.sol --rpc-url https://rpc.mainnet.arc.io --broadcast
+   * Leave empty to disable registry lookups.
+   * Deployed 2026-09-21: https://explorer.arc.io/address/0xf9C7c0897a0dbd05D9e9D70c180fB0745b4D2319
    */
-  registryAddress: "",
+  registryAddress: "0xf9C7c0897a0dbd05D9e9D70c180fB0745b4D2319",
 
   /** Override the RPC (e.g. your own Alchemy key). Empty = public endpoints. */
   rpcUrl: "",

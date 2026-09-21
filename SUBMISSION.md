@@ -16,10 +16,8 @@ transaction actually does before you sign it.
 
 **Builder profile:** https://github.com/0xZumii
 
-**Deployed on Arc mainnet:** ArcGuardRegistry at `0x…` —
-`https://explorer.arc.io/address/0x…`
-(deploy it via `docs/deploy.html`, then replace both `0x…` above with the real
-address; nothing else on this page needs editing)
+**Deployed on Arc mainnet:** ArcGuardRegistry at
+[`0xf9C7c0897a0dbd05D9e9D70c180fB0745b4D2319`](https://explorer.arc.io/address/0xf9C7c0897a0dbd05D9e9D70c180fB0745b4D2319)
 
 ---
 
