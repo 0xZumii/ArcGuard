@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<!--
+  Why this file exists.
+
+  GitHub Pages runs Jekyll by default, and Jekyll's rule is: in a directory with
+  no index.html, render README.md as the homepage. So if Pages is configured to
+  serve the repository root, visitors see the README instead of the app.
+
+  This redirect sends the root to the real application in docs/, which works no
+  matter which folder Pages is pointed at.
+
+  If you set Settings -> Pages -> Folder to "/docs", this file becomes redundant
+  and you can delete it.
+-->
+<title>Arc Guard</title>
+<meta http-equiv="refresh" content="0; url=./docs/" />
+<link rel="canonical" href="./docs/" />
+</head>
+<body>
+<p>Loading Arc Guard — check a transaction before you sign it. If nothing happens,
+<a href="./docs/">open the checker</a>.</p>
+<script>location.replace("./docs/");</script>
+</body>
+</html>

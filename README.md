@@ -106,6 +106,20 @@ submission.
 Push this repo, then **Settings → Pages → Deploy from a branch → `main` / `/docs`**.
 `docs/` is self-contained: the app, the libraries, and the contract artifact.
 
+**Why the root has an `index.html` that only redirects.** GitHub Pages runs
+Jekyll by default, and Jekyll's rule is that a directory with no `index.html`
+gets its `README.md` rendered as the homepage. If Pages is pointed at the
+repository root, visitors therefore see this README instead of the checker —
+which looks like a broken deployment but is just Jekyll's fallback. Two things
+prevent it:
+
+- `index.html` at the root redirects to `./docs/`, so the site works whichever
+  folder Pages is pointed at.
+- `docs/.nojekyll` stops Jekyll from processing the app directory at all.
+
+Once Pages is set to `/docs`, the root `index.html` is redundant and can be
+deleted.
+
 ### 2. The registry contract (Arc mainnet)
 
 The contract is already compiled and committed at
