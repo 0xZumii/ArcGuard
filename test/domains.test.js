@@ -63,6 +63,35 @@ test("punycode homoglyph hosts are flagged", () => {
   assert.ok(result.findings.some((f) => /Punycode/.test(f.title)), titles(result));
 });
 
+test("brand fused with a lure word is critical even without a hyphen", () => {
+  for (const host of ["arcclaim.com", "airdroparc.com", "arcrewards.io", "arcclaims.com"]) {
+    const result = analyzeDomain(host);
+    const f = result.findings.find((x) => /Brand fused with a lure word/.test(x.title));
+    assert.ok(f, `${host}: ${titles(result)}`);
+    assert.equal(f.level, "critical", host);
+  }
+});
+
+/**
+ * These are the cases the boundary rules exist to protect. Flagging any of them
+ * would make the tool cry wolf — arcscan.app is referenced in Arc's own docs,
+ * and "arcade"/"architecture" merely contain the letters.
+ */
+test("legitimate or unrelated arc-prefixed domains are NOT escalated", () => {
+  const mustStayQuiet = [
+    "arcscan.app",      // real ecosystem explorer
+    "arcguard.live",    // a third-party tool name, no lure word
+    "arcade.com",       // unrelated word
+    "architecture.io",  // unrelated word
+    "arcaderewards.com",// culprit is "arcade", not the Arc brand
+  ];
+  for (const host of mustStayQuiet) {
+    const result = analyzeDomain(host);
+    const escalated = result.findings.filter((f) => f.level === "critical" || f.level === "high");
+    assert.equal(escalated.length, 0, `${host} was escalated: ${titles(result)}`);
+  }
+});
+
 test("an ordinary unrelated domain is only 'not official'", () => {
   const result = analyzeDomain("example.com");
   assert.equal(result.official, false);

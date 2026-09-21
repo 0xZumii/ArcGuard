@@ -67,6 +67,37 @@ export function editDistance(a, b) {
   return prev[cols - 1];
 }
 
+/**
+ * Brand and lure fused into a single label: "arcclaim", "airdroparc",
+ * "arcrewards". Scammers concatenate to dodge the hyphen/word-boundary rules,
+ * and those forms were previously only reported as "not an official domain".
+ *
+ * Precision matters more than recall here. The rule requires the label to be
+ * *exactly* brand + lure (tolerating a trailing plural "s"):
+ *
+ *   arcclaim    -> "claim" removed -> "arc"      -> flagged
+ *   airdroparc  -> "airdrop" removed -> "arc"    -> flagged
+ *   arcaderewards -> "rewards" removed -> "arcade" -> NOT flagged
+ *   arcscan / arcguard                           -> no lure -> NOT flagged
+ *
+ * That last pair is the point: arcscan.app appears in Arc's own docs, and a
+ * tool that flagged it would be crying wolf.
+ */
+function compoundBrandLure(host) {
+  const parts = host.split(".");
+  const words = parts.slice(0, Math.max(1, parts.length - 1)).join(".").split(/[.-]/).filter(Boolean);
+  for (const label of words) {
+    for (const lure of LURE_WORDS) {
+      if (!label.includes(lure)) continue;
+      const remainder = label.replace(lure, "").replace(/s$/, "");
+      if (remainder === "arc" || remainder === "circle") {
+        return { label, lure };
+      }
+    }
+  }
+  return null;
+}
+
 export function analyzeDomain(input) {
   const host = extractHost(input);
   if (!host) {
@@ -80,6 +111,7 @@ export function analyzeDomain(input) {
   const findings = [];
   const lureHits = LURE_WORDS.filter((word) => labels(host).includes(word));
   const mentionsBrand = /(^|[^a-z])(arc|circle)([^a-z]|$)/.test(host.replace(/\./g, "-"));
+  const fused = compoundBrandLure(host);
 
   if (host.startsWith("xn--") || host.includes(".xn--")) {
     findings.push(finding("high", "Punycode domain",
@@ -113,6 +145,12 @@ export function analyzeDomain(input) {
       `is not publicly tradable, so a site asking you to ` +
       `claim, vote or stake on those terms is describing something that does not exist. ` +
       `governance-arc.com is the documented example.`));
+  } else if (fused) {
+    findings.push(finding("critical", "Brand fused with a lure word in the hostname",
+      `"${fused.label}" is Arc/Circle branding welded onto "${fused.lure}" — no hyphen, so the word-boundary ` +
+      `check does not see it. This is a deliberate dodge, and it is what "arcclaim", "arcrewards" and ` +
+      `"airdroparc" style domains look like. Circle has announced no airdrop and no rewards programme for ` +
+      `Arc, and the ARC asset is not publicly tradable, so anything these offer you does not exist.`));
   } else if (mentionsBrand) {
     findings.push(finding("high", "Uses the Arc/Circle name without being official",
       `"${host}" references Arc or Circle but is not an official domain. The real Arc domains are: ` +

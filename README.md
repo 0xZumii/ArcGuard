@@ -54,7 +54,14 @@ their implementation.
 **A link.** The documented Arc drainer (`governance-arc.com`) clones the real
 front end and drains on wallet connect. No bytecode check catches that. Domain
 checking does: official-domain comparison, a documented-drainer list, brand +
-lure-word detection (`arc-claim.com`), typosquat distance, and punycode.
+lure-word detection (`arc-claim.com`), **fused** brand+lure detection
+(`arcclaim.com`, `airdroparc.com` — no hyphen, so the boundary rules miss it),
+typosquat distance, and punycode.
+
+The boundary rules are deliberate. `arcscan.app` appears in Arc's own docs, and
+`arcade.com` merely contains the letters. The fused rule therefore requires the
+label to be *exactly* brand + lure, so those stay unflagged while
+`arcrewards.io` does not.
 
 **A community registry**, deployed on Arc mainnet: an append-only, ownerless
 contract where anyone can file a public report against an address, with a small
