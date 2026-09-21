@@ -161,8 +161,23 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); ou
 .btn:disabled { opacity: 0.5; cursor: progress; }
 
 /* ---------- examples ---------- */
-.examples { margin-top: 1.5rem; border-top: 1px dashed var(--border); padding-top: 1rem; }
-.examples-label { font-size: 0.82rem; color: var(--text-faint); margin: 0 0 0.6rem; }
+/* Sits above the form on purpose: a first-time visitor has no transaction to
+   paste, so the demos have to be the first thing they can act on. */
+.examples {
+  margin-bottom: 1.5rem;
+  padding: 0.95rem 1.05rem 1.05rem;
+  background: #0d1119;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.examples-label {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  margin: 0 0 0.7rem;
+  line-height: 1.5;
+}
+.examples-label strong { color: var(--text); }
 .examples-row { display: flex; flex-wrap: wrap; gap: 0.45rem; }
 .example {
   font: inherit; font-size: 0.78rem; cursor: pointer;

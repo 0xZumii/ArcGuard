@@ -51,9 +51,17 @@
   <!-- ================= TRANSACTION ================= -->
   <section class="panel is-active" id="panel-transaction" role="tabpanel">
     <p class="panel-intro">
-      Paste what your wallet is about to ask you to sign — or a transaction hash you have already
-      seen. Nothing is sent to us; the page talks to Arc's public RPC directly from your browser.
+      Paste what your wallet is about to ask you to sign — or start with one of the examples
+      below. Nothing is sent to us; the page talks to Arc's public RPC directly from your browser.
     </p>
+
+    <div class="examples">
+      <p class="examples-label">
+        <strong>No transaction handy?</strong> Load one of these and watch the checker catch it.
+        Four are documented Arc scam shapes; two are legitimate and should <em>not</em> be flagged.
+      </p>
+      <div class="examples-row" id="examples"></div>
+    </div>
 
     <form id="tx-form" class="form">
       <div class="field">
@@ -98,11 +106,6 @@
         <button type="button" class="btn btn--ghost" id="tx-clear">Clear</button>
       </div>
     </form>
-
-    <div class="examples">
-      <p class="examples-label">Or load a documented Arc scam pattern and watch it get caught:</p>
-      <div class="examples-row" id="examples"></div>
-    </div>
 
     <div id="tx-results" class="results" aria-live="polite"></div>
   </section>
