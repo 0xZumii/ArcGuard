@@ -143,6 +143,18 @@ if (await waitFor("the drainer result", () => /Known Arc drainer domain/.test(te
   fail(`link result rendered: ${text("link-results").slice(0, 200)}`);
 }
 
+console.log("\ncompanion tool link");
+// The companion is the honest completion of the limitations list: this tool
+// cannot read signing requests, and the link says what does.
+if (/href="https:\/\/0xZumii\.github\.io\/ClearSign\/"/.test(html)) ok("links to ClearSign at its live URL");
+else fail("no ClearSign link");
+if (/class="companion"/.test(html)) ok("companion section is present in the body");
+else fail("companion section missing");
+if (/rel="noopener"/.test(html) && /target="_blank"/.test(html)) ok("external link uses target=_blank + rel=noopener");
+else fail("external link is missing safe attributes");
+if (/cannot read a signing request|eth_signTypedData_v4/.test(html)) ok("states the signature gap it is answering");
+else fail("does not state the gap");
+
 console.log("\nthe page never claims safety");
 if (/not an oracle/.test(html) && /never says/.test(html)) ok("the static copy states findings are not a safety guarantee");
 else fail("the page does not state the limitation");

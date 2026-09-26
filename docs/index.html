@@ -158,6 +158,27 @@
       <li>Bytecode reading is heuristic. Decompiled intent is not intent.</li>
     </ul>
   </section>
+
+  <section class="companion">
+    <h2>The other half: signatures</h2>
+    <p>
+      Arc Guard reads <strong>transactions</strong>. It cannot read a signing request
+      (<code>eth_signTypedData_v4</code>) — the other way wallets get drained, where a
+      <code>permit</code> grants spending rights without ever showing you a transaction
+      to decode.
+    </p>
+    <p>
+      <strong>ClearSign</strong> covers that layer: whether the contract will actually
+      <em>accept</em> the signature, what it authorises, and whether it has already been
+      submitted or can still be used against you later. Separate tool, same author, same
+      rule — neither one says "safe".
+    </p>
+    <p class="companion-cta">
+      <a class="btn btn--primary" href="https://0xZumii.github.io/ClearSign/"
+         target="_blank" rel="noopener">Open ClearSign ↗</a>
+      <span class="hint">Opens in a new tab, so you keep whatever you were checking here.</span>
+    </p>
+  </section>
 </main>
 
 <footer class="site-footer">

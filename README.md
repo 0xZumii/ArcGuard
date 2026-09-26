@@ -214,8 +214,10 @@ CI runs all of it on Node 20 and 22.
   the front end is where that is handled.
 - The domain list is a **seed, not a feed**. Extend `KNOWN_DRAINER_DOMAINS`.
 - Bytecode reading is heuristic. **Decompiled intent is not intent.**
-- It cannot see inside `permit` signatures for a spender nested in typed data
-  beyond flattening the payload.
+- It **cannot read a signing request** (`eth_signTypedData_v4`). A `permit`
+  signature authorises spending without producing a transaction to decode, so
+  that layer is a different tool with a different input — see
+  [ClearSign](#companion-the-other-half) below.
 - Arc's native asset is USDC, so `msg.value` and the ERC-20 balance are the same
   underlying money at different precisions. Getting that wrong is the most likely
   way to misread an amount, and the tool warns about it rather than hiding it.
@@ -235,6 +237,23 @@ institutional validators and a brand-new, less-experienced user base — which i
 exactly the population a structured, repetitive scam campaign targets. The
 defence that fits is small, boring and specific: check the transaction against
 the claim.
+
+## Companion: the other half
+
+Arc Guard reads **transactions**. The other way wallets get drained is a
+**signature request** — an `eth_signTypedData_v4` payload that grants spending
+rights without ever producing a transaction to decode. Different input, so it is
+a different tool rather than a mode of this one:
+
+**[ClearSign](https://0xZumii.github.io/ClearSign/)** — recomputes the EIP-712
+domain separator and compares it against the contract's own `DOMAIN_SEPARATOR()`
+(the one-word typo that compiles, deploys, and silently invalidates every
+signature forever), reports what a permit actually authorises, and answers what
+your wallet never does: whether it has been submitted yet, and whether it expires
+or can be used later.
+
+Separate repository, same author, same rule: **neither tool says "safe"**, and
+both say what they could not check.
 
 ## Layout
 

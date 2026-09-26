@@ -274,6 +274,31 @@ input:focus, textarea:focus, select:focus { outline: 2px solid var(--accent); ou
 .limits ul { color: var(--text-dim); font-size: 0.87rem; padding-left: 1.15rem; }
 .limits li + li { margin-top: 0.4rem; }
 
+/* ---------- companion tool ---------- */
+/* Sits directly after the limitations list on purpose: that list says Arc Guard
+   cannot read signing requests, and this is the answer to it. Cause, then the
+   thing that covers it. */
+.companion {
+  margin-top: 1.5rem;
+  padding: 1.2rem 1.3rem 1.3rem;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+}
+.companion h2 { font-size: 1rem; margin: 0 0 0.6rem; }
+.companion p { margin: 0 0 0.7rem; color: var(--text-dim); font-size: 0.87rem; }
+.companion p:last-of-type { margin-bottom: 0; }
+.companion strong { color: var(--text); }
+.companion-cta {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 1rem !important;
+}
+.companion-cta .hint { font-size: 0.78rem; color: var(--text-faint); }
+
 .site-footer { margin-top: 2.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border); color: var(--text-faint); font-size: 0.8rem; }
 .site-footer p { margin: 0; }
 
